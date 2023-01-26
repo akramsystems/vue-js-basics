@@ -14,28 +14,35 @@
       .box.three {
         background-color: blue;
       }
+      [v-cloak] {
+        display: none;
+      }
     </style>
   </head>
   <body>
-    <div id="app">
-      {{ greeting }}
-      <input type="text" v-model="greeting" />
+    <div id="app" v-cloak>
+      <input @keyup.enter="greet(greeting)" type="text" v-model="greeting" />
 
       <hr />
-
+      <button @click="toggleBox">Toggle Box</button>
       <div v-if="isVisible === true" class="box"></div>
-      <div v-else-if="isVisible2 === true" class="box two"></div>
-      <div v-else class="box three"></div>
     </div>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
       let app = Vue.createApp({
         data: function () {
           return {
-            greeting: "Hello World!",
+            greeting: "Hello Vue!",
             isVisible: false,
-            isVisible2: false,
           };
+        },
+        methods: {
+          toggleBox() {
+            this.isVisible = !this.isVisible;
+          },
+          greet(greeting) {
+            alert(greeting);
+          },
         },
       });
       app.mount("#app");
