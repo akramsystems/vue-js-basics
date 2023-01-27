@@ -25,15 +25,18 @@
   </head>
   <body>
     <div id="app" v-cloak>
+      <login-form> </login-form>
+
       <hr />
       <button @click="toggleBox">Toggle Box</button>
-      <test-box v-if="isVisible" />
+      <div v-if="isVisible === true" class="box"></div>
     </div>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
       let app = Vue.createApp({
         data: function () {
           return {
+            greeting: "Hello Vue!",
             isVisible: false,
           };
         },
@@ -41,9 +44,9 @@
           toggleBox() {
             this.isVisible = !this.isVisible;
           },
-        },
-        updated() {
-          console.log("Updated");
+          greet(greeting) {
+            alert(greeting);
+          },
         },
       });
       // define a global component
@@ -51,32 +54,16 @@
         template: `
             <form @submit.prevent="handleSubmit">
                 <h1>{{ title }}</h1>
-                <custom-input
-                v-for="(input, i) in inputs"
-                :key="i"
-                v-model="input.value"
-                :label="input.label"
-                :type="input.type" />
+                <custom-input v-model="email" v-bind:label="emailLabel" />
+                <custom-input v-model="password" v-bind:label="passwordLabel" />
                 <button>Submit</button>
             </form>
         `,
-        components: ["custom-input", "test-box"],
+        components: ["custom-input"],
         data() {
           return {
             title: "Login Form",
             email: "test@email.com",
-            inputs: [
-              {
-                label: "Email",
-                value: "",
-                type: "email",
-              },
-              {
-                label: "Password",
-                value: "",
-                type: "password",
-              },
-            ],
             password: "abc123",
             emailLabel: "Email",
             passwordLabel: "Password",
@@ -84,8 +71,7 @@
         },
         methods: {
           handleSubmit() {
-            // console.log("Submitted", this.email, this.password);
-            console.log(this.inputs[0].value, this.inputs[1].value);
+            console.log("Submitted", this.email, this.password);
           },
         },
       });
@@ -93,11 +79,11 @@
         template: `
                 <label>
                     {{ label }}
-                    <input :type="type" v-model="inputValue"/>
+                    <input type="text" v-model="inputValue"/>
                 </label>
         `,
         // props are immutable when passed from parent to child
-        props: ["label", "type", "modelValue"], // get the value from the parent component
+        props: ["label", "modelValue"], // get the value from the parent component
         computed: {
           inputValue: {
             get() {
@@ -108,20 +94,6 @@
               this.$emit("update:modelValue", value);
             },
           },
-        },
-      });
-      app.component("test-box", {
-        template: `
-            <div class="box"></div>
-        `,
-        created() {
-          console.log("Created");
-        },
-        mounted() {
-          console.log("Mounted");
-        },
-        unmounted() {
-          console.log("Unmounted");
         },
       });
       app.mount("#app");

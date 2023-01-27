@@ -25,15 +25,18 @@
   </head>
   <body>
     <div id="app" v-cloak>
+      <login-form> </login-form>
+
       <hr />
       <button @click="toggleBox">Toggle Box</button>
-      <test-box v-if="isVisible" />
+      <div v-if="isVisible === true" class="box"></div>
     </div>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
       let app = Vue.createApp({
         data: function () {
           return {
+            greeting: "Hello Vue!",
             isVisible: false,
           };
         },
@@ -41,9 +44,9 @@
           toggleBox() {
             this.isVisible = !this.isVisible;
           },
-        },
-        updated() {
-          console.log("Updated");
+          greet(greeting) {
+            alert(greeting);
+          },
         },
       });
       // define a global component
@@ -51,16 +54,16 @@
         template: `
             <form @submit.prevent="handleSubmit">
                 <h1>{{ title }}</h1>
-                <custom-input
+                <custom-input 
                 v-for="(input, i) in inputs"
                 :key="i"
                 v-model="input.value"
-                :label="input.label"
+                :label="input.label" 
                 :type="input.type" />
                 <button>Submit</button>
             </form>
         `,
-        components: ["custom-input", "test-box"],
+        components: ["custom-input"],
         data() {
           return {
             title: "Login Form",
@@ -108,20 +111,6 @@
               this.$emit("update:modelValue", value);
             },
           },
-        },
-      });
-      app.component("test-box", {
-        template: `
-            <div class="box"></div>
-        `,
-        created() {
-          console.log("Created");
-        },
-        mounted() {
-          console.log("Mounted");
-        },
-        unmounted() {
-          console.log("Unmounted");
         },
       });
       app.mount("#app");

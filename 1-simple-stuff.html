@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vue 3 Basics</title>
+    <style>
+      .box {
+        width: 200px;
+        height: 200px;
+        background-color: maroon;
+      }
+      .box.two {
+        background-color: green;
+      }
+      .box.three {
+        background-color: blue;
+      }
+      [v-cloak] {
+        display: none;
+      }
+      input {
+        display: block;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" v-cloak>
+      <login-form> </login-form>
+
+      <hr />
+      <button @click="toggleBox">Toggle Box</button>
+      <div v-if="isVisible === true" class="box"></div>
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+      let app = Vue.createApp({
+        data: function () {
+          return {
+            greeting: "Hello Vue!",
+            isVisible: false,
+          };
+        },
+        methods: {
+          toggleBox() {
+            this.isVisible = !this.isVisible;
+          },
+          greet(greeting) {
+            alert(greeting);
+          },
+        },
+      });
+      // define a global component
+      app.component("login-form", {
+        template: `
+            <form @submit.prevent="handleSubmit">
+                <h1>{{ title }}</h1>
+                <input type="email" v-model="email"/>
+                <input type="password" v-model="password"/>
+                <button>Submit</button>
+            </form>
+        `,
+        data() {
+          return {
+            title: "Login Form",
+            email: "",
+            password: "",
+          };
+        },
+        methods: {
+          handleSubmit() {
+            console.log("Submitted", this.email, this.password);
+          },
+        },
+      });
+      app.mount("#app");
+    </script>
+  </body>
+</html>
